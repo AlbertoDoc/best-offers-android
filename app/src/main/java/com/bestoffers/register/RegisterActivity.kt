@@ -55,6 +55,7 @@ class RegisterActivity : ComponentActivity() {
 fun RegisterForm(model: RegisterViewModel) {
     val focusManager = LocalFocusManager.current
     var isPasswordVisible by remember { mutableStateOf(false) }
+    var isConfirmPasswordVisible by remember { mutableStateOf(false) }
 
     Column {
         AppTextField(
@@ -129,6 +130,39 @@ fun RegisterForm(model: RegisterViewModel) {
                 }
             },
             visualTransformation = if (isPasswordVisible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            }
+        )
+
+        PasswordTextField(
+            text = model.confirmPassword,
+            placeholder = "Confirmar Senha",
+            onChange = {
+                model.confirmPassword = it
+            },
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Password,
+            keyBoardActions = KeyboardActions(
+                onNext = {
+                    focusManager.clearFocus(true)
+                }
+            ),
+            leadingIcon = {
+                IconButton(onClick = {
+                    isConfirmPasswordVisible = !isConfirmPasswordVisible
+                }) {
+                    Icon(
+                        imageVector = if (isConfirmPasswordVisible)
+                            Icons.Filled.Visibility
+                        else
+                            Icons.Filled.VisibilityOff,
+                        contentDescription = "Password Visibility"
+                    )
+                }
+            },
+            visualTransformation = if (isConfirmPasswordVisible) {
                 VisualTransformation.None
             } else {
                 PasswordVisualTransformation()
