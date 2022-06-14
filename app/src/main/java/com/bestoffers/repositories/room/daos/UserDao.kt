@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.bestoffers.repositories.room.models.User
+import com.bestoffers.repositories.room.entities.User
 
 @Dao
 interface UserDao {

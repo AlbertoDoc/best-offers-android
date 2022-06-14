@@ -1,4 +1,4 @@
-package com.bestoffers.repositories.room.models
+package com.bestoffers.repositories.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
