@@ -37,6 +37,12 @@
             android:label="Login"
             android:theme="@style/Theme.BestOffers">
         </activity>
+
+        <activity android:name=".home.HomeActivity"
+            android:exported="true"
+            android:label="Home"
+            android:theme="@style/Theme.BestOffers">
+        </activity>
     </application>
 
 </manifest>
