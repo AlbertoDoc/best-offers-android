@@ -3,7 +3,7 @@ package com.bestoffers.repositories.retrofit
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitClientInstance {
+class RetrofitClient {
 
     private var retrofit: Retrofit? = null
     private val BASE_URL: String = ""

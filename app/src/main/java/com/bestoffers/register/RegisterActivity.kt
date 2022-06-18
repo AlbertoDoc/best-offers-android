@@ -34,7 +34,7 @@ class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val model: RegisterViewModel by viewModels()
+        val viewModel: RegisterViewModel by viewModels()
 
         setContent {
             BestOffersTheme {
@@ -43,7 +43,7 @@ class RegisterActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     Scaffold {
-                        RegisterForm(model)
+                        RegisterForm(viewModel)
                     }
                 }
             }
@@ -52,17 +52,17 @@ class RegisterActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegisterForm(model: RegisterViewModel) {
+fun RegisterForm(viewModel: RegisterViewModel) {
     val focusManager = LocalFocusManager.current
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isConfirmPasswordVisible by remember { mutableStateOf(false) }
 
     Column {
         AppTextField(
-            text = model.firstName,
+            text = viewModel.firstName,
             placeholder = "Primeiro Nome",
             onChange = {
-                model.firstName = it
+                viewModel.firstName = it
             },
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Text,
@@ -74,10 +74,10 @@ fun RegisterForm(model: RegisterViewModel) {
         )
 
         AppTextField(
-            text = model.lastName,
+            text = viewModel.lastName,
             placeholder = "Sobrenome",
             onChange = {
-                model.lastName = it
+                viewModel.lastName = it
             },
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Text,
@@ -89,10 +89,10 @@ fun RegisterForm(model: RegisterViewModel) {
         )
 
         AppTextField(
-            text = model.email,
+            text = viewModel.email,
             placeholder = "Email",
             onChange = {
-                model.email = it
+                viewModel.email = it
             },
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Text,
@@ -104,10 +104,10 @@ fun RegisterForm(model: RegisterViewModel) {
         )
 
         PasswordTextField(
-            text = model.password,
+            text = viewModel.password,
             placeholder = "Senha",
             onChange = {
-                model.password = it
+                viewModel.password = it
             },
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Password,
@@ -137,10 +137,10 @@ fun RegisterForm(model: RegisterViewModel) {
         )
 
         PasswordTextField(
-            text = model.confirmPassword,
+            text = viewModel.confirmPassword,
             placeholder = "Confirmar Senha",
             onChange = {
-                model.confirmPassword = it
+                viewModel.confirmPassword = it
             },
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Password,
@@ -169,9 +169,7 @@ fun RegisterForm(model: RegisterViewModel) {
             }
         )
 
-        ConfirmButton {
-
-        }
+        ConfirmButton { viewModel.sendRegistration() }
     }
 }
 
