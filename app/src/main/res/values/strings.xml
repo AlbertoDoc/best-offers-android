@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Best Offers</string>
+
+    <string name="home">Home</string>
+    <string name="user">User</string>
+    <string name="products">Produtos</string>
 </resources>
