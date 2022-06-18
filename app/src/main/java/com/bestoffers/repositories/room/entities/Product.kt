@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Product (
         @PrimaryKey val uid: String,
         @ColumnInfo(name = "name") val name: String,
-        @ColumnInfo(name = "price") val price: Float,
+        @ColumnInfo(name = "price") val price: Double,
         @ColumnInfo(name = "stablishment_uid") val stablishmentUid: String?,
         @ColumnInfo(name = "shared_product_uid") val sharedProductUid: String?
 )
