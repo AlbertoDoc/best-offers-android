@@ -3,6 +3,7 @@ package com.bestoffers.register
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bestoffers.repositories.retrofit.RetrofitClient
@@ -21,9 +22,55 @@ class RegisterViewModel : ViewModel() {
     var password by mutableStateOf("")
     var confirmPassword by mutableStateOf("")
 
-    val errorMessage = MutableLiveData<String>()
+    private val errorMessage = MutableLiveData<String>()
 
     lateinit var retrofitClient: Retrofit
+
+    fun getErrorMessage(): LiveData<String> {
+        return errorMessage
+    }
+
+    fun validateForm(): Boolean {
+        var errorString = "";
+        if (firstName.isEmpty()) {
+            errorString += "Preencha o primeiro nome\n"
+        }
+
+        if (lastName.isEmpty()) {
+            errorString += "Preencha o sobrenome\n"
+        }
+
+        if (email.isEmpty()) {
+            errorString += "Preencha o email\n"
+        }
+
+        if (password.isEmpty()) {
+            errorString += "Preencha a senha\n"
+        }
+
+        if (confirmPassword.isEmpty()) {
+            errorString += "Preencha a confirmação de senha"
+        }
+
+        if (errorString.isNotEmpty()) {
+            errorMessage.postValue(errorString)
+            return false
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errorString = "Email inválido."
+            errorMessage.postValue(errorString)
+            return false
+        }
+
+        if (password != confirmPassword) {
+            errorString = "As senhas não são iguais."
+            errorMessage.postValue(errorString)
+            return false
+        }
+
+        return true
+    }
 
     fun sendRegistration() {
         retrofitClient = RetrofitClient().getRetrofitInstance()

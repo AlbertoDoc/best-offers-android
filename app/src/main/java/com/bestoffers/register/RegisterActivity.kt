@@ -1,15 +1,14 @@
 package com.bestoffers.register
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -17,17 +16,14 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.bestoffers.login.AppTextField
-import com.bestoffers.login.PasswordTextField
+import com.bestoffers.ui.composables.AppTextField
+import com.bestoffers.ui.composables.PasswordTextField
 import com.bestoffers.ui.theme.BestOffersTheme
 
 class RegisterActivity : ComponentActivity() {
@@ -35,6 +31,10 @@ class RegisterActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel: RegisterViewModel by viewModels()
+
+        viewModel.getErrorMessage().observe(this) {
+            Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
+        }
 
         setContent {
             BestOffersTheme {
@@ -169,77 +169,12 @@ fun RegisterForm(viewModel: RegisterViewModel) {
             }
         )
 
-        ConfirmButton { viewModel.sendRegistration() }
-    }
-}
-
-@Composable
-fun AppTextField(
-    modifier: Modifier = Modifier,
-    text: String,
-    placeholder: String,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    onChange: (String) -> Unit = {},
-    imeAction: ImeAction = ImeAction.Next,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    keyBoardActions: KeyboardActions = KeyboardActions(),
-    isEnabled: Boolean = true,
-) {
-    OutlinedTextField(
-        modifier = modifier.fillMaxWidth(),
-        value = text,
-        onValueChange = onChange,
-        leadingIcon = leadingIcon,
-        textStyle = TextStyle(fontSize = 18.sp),
-        keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
-        keyboardActions = keyBoardActions,
-        enabled = isEnabled,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.Black,
-            unfocusedBorderColor = Color.Gray,
-            disabledBorderColor = Color.Gray,
-            disabledTextColor = Color.Black
-        ),
-        placeholder = {
-            Text(text = placeholder, style = TextStyle(fontSize = 18.sp, color = Color.LightGray))
+        ConfirmButton {
+            if (viewModel.validateForm()) {
+                viewModel.sendRegistration()
+            }
         }
-    )
-}
-
-
-@Composable
-fun PasswordTextField(
-    modifier: Modifier = Modifier,
-    text: String,
-    placeholder: String,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    onChange: (String) -> Unit = {},
-    imeAction: ImeAction = ImeAction.Next,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    keyBoardActions: KeyboardActions = KeyboardActions(),
-    isEnabled: Boolean = true,
-    visualTransformation: VisualTransformation
-) {
-    OutlinedTextField(
-        modifier = modifier.fillMaxWidth(),
-        value = text,
-        onValueChange = onChange,
-        leadingIcon = leadingIcon,
-        textStyle = TextStyle(fontSize = 18.sp),
-        keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
-        keyboardActions = keyBoardActions,
-        enabled = isEnabled,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.Black,
-            unfocusedBorderColor = Color.Gray,
-            disabledBorderColor = Color.Gray,
-            disabledTextColor = Color.Black
-        ),
-        placeholder = {
-            Text(text = placeholder, style = TextStyle(fontSize = 18.sp, color = Color.LightGray))
-        },
-        visualTransformation = visualTransformation
-    )
+    }
 }
 
 @Composable
