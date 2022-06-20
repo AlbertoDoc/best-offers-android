@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -49,14 +50,14 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 bottomBar = { AppBottomNavigation(navController = navController) }
             ) {
                 NavHost(navController = navController, startDestination = NAV_HOME ) {
-                    composable(NAV_HOME) { AppScreen(text = "Home Screen") }
-                    composable(NAV_USER) { AppScreen(text = "User Screen") }
-                    composable(NAV_PRODUCTS) { AppScreen(text = "Products Screen") }
+                    composable(NAV_HOME) { HomeScreen(navController = navController, text = "Home Screen") }
+                    composable(NAV_USER) { UserScreen(navController = navController, text = "User Screen") }
+                    composable(NAV_PRODUCTS) { ProductsScreen(navController = navController, text = "Products Screen") }
                 }
-                Column {
-                    TopAppBar(title = { Text("Home") })
-                    ProductList(products = viewModel.getProducts())
-                }
+                //Column {
+                  //  TopAppBar(title = { Text("Home") })
+                    //ProductList(products = viewModel.getProducts())
+                //}
             }
         }
     }
@@ -69,6 +70,23 @@ fun ProductList(products: LiveData<List<Product>>) {
             ProductCard(product = product)
         }
     }
+}
+
+
+
+@Composable
+fun HomeScreen(navController: NavController, text: String) {
+
+}
+
+@Composable
+fun UserScreen(navController: NavController, text: String) {
+
+}
+
+@Composable
+fun ProductsScreen(navController: NavController, text: String) {
+
 }
 
 @Composable
