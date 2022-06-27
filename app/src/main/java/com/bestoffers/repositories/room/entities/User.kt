@@ -13,6 +13,6 @@ data class User (
     @ColumnInfo(name = "email") val email: String,
     @ColumnInfo(name = "password") val password: String,
     @ColumnInfo(name = "active") val active: Boolean,
-    @ColumnInfo(name = "shared_products_uid") val sharedProductsUid: List<String>?,
-    @ColumnInfo(name = "products_of_interest_uid") val productsOfInterestUid: List<String>?
+    @ColumnInfo(name = "shared_products_uid") val sharedProductsUid: MutableList<String>?,
+    @ColumnInfo(name = "products_of_interest_uid") val productsOfInterestUid: MutableList<String>?
 )

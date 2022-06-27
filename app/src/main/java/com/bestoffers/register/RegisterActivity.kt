@@ -1,5 +1,6 @@
 package com.bestoffers.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.bestoffers.home.HomeActivity
 import com.bestoffers.ui.composables.AppTextField
 import com.bestoffers.ui.composables.PasswordTextField
 import com.bestoffers.ui.theme.BestOffersTheme
@@ -35,6 +37,14 @@ class RegisterActivity : ComponentActivity() {
         viewModel.getErrorMessage().observe(this) {
             Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
         }
+
+        viewModel.getNavigationMessage().observe(this) {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+
+        viewModel.loadDatabase(this)
 
         setContent {
             BestOffersTheme {

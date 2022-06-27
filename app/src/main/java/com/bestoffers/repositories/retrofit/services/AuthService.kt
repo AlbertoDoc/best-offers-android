@@ -7,9 +7,9 @@ import retrofit2.http.Body
 
 interface AuthService {
 
-    @POST("/signup")
+    @POST("auth/signup")
     fun postSignup(@Body json: JsonObject): Call<JsonObject>
 
-    @POST("/login")
+    @POST("auth/login")
     fun postLogin(@Body json: JsonObject): Call<JsonObject>
 }

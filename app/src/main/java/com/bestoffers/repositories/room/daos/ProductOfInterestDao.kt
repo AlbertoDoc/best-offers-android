@@ -12,7 +12,7 @@ interface ProductOfInterestDao {
     fun getAll(): List<ProductOfInterest>
 
     @Insert
-    fun insertAll(vararg productOfInterest: List<ProductOfInterest>)
+    fun insertAll(productOfInterest: List<ProductOfInterest>)
 
     @Insert
     fun insert(productOfInterest: ProductOfInterest)

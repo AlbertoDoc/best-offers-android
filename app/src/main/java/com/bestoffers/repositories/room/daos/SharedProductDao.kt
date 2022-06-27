@@ -12,7 +12,7 @@ interface SharedProductDao {
     fun getAll(): List<SharedProduct>
 
     @Insert
-    fun insertAll(vararg sharedProducts: List<SharedProduct>)
+    fun insertAll(sharedProducts: List<SharedProduct>)
 
     @Insert
     fun insert(sharedProduct: SharedProduct)

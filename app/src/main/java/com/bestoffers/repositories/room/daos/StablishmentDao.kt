@@ -12,7 +12,7 @@ interface StablishmentDao {
     fun getAll(): List<Stablishment>
 
     @Insert
-    fun insertAll(vararg stablishments: List<Stablishment>)
+    fun insertAll(stablishments: List<Stablishment>)
 
     @Insert
     fun insert(stablishment: Stablishment)

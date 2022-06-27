@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class Stablishment (
     @PrimaryKey val uid: String,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "products_uid") val productsUid: List<String>?
+    @ColumnInfo(name = "products_uid") val productsUid: MutableList<String>?
 )

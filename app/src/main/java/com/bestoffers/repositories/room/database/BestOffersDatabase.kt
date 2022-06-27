@@ -2,6 +2,7 @@ package com.bestoffers.repositories.room.database
 
 import android.content.Context
 import androidx.room.Room
+import com.bestoffers.repositories.room.util.Converters
 
 class BestOffersDatabase {
 
