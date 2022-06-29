@@ -30,7 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bestoffers.details.DetailsActivity
 import com.bestoffers.navigation.NAV_HOME
-import com.bestoffers.navigation.NAV_PRODUCTS
+import com.bestoffers.navigation.NAV_MY_ALERTS
 import com.bestoffers.navigation.NAV_USER
 import com.bestoffers.repositories.room.entities.Product
 import com.bestoffers.ui.composables.AppBottomNavigation
@@ -88,7 +88,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
                         )
                     }
                     composable(NAV_USER) { UserScreen(navController = navController, text = "User Screen") }
-                    composable(NAV_PRODUCTS) { ProductsScreen(navController = navController, text = "Products Screen") }
+                    composable(NAV_MY_ALERTS) { MyAlertsScreen(navController = navController, text = "My Alerts Screen") }
                 }
             }
         }
@@ -112,7 +112,7 @@ fun UserScreen(navController: NavController, text: String) {
 }
 
 @Composable
-fun ProductsScreen(navController: NavController, text: String) {
+fun MyAlertsScreen(navController: NavController, text: String) {
     Text(text = "text3")
 }
 
