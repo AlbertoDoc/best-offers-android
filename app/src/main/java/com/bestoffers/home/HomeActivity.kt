@@ -1,5 +1,6 @@
 package com.bestoffers.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -18,21 +19,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bestoffers.details.DetailsActivity
 import com.bestoffers.navigation.NAV_HOME
 import com.bestoffers.navigation.NAV_PRODUCTS
 import com.bestoffers.navigation.NAV_USER
 import com.bestoffers.repositories.room.entities.Product
 import com.bestoffers.ui.composables.AppBottomNavigation
 import com.bestoffers.ui.theme.BestOffersTheme
+import com.bestoffers.util.SampleData
 
 class HomeActivity : ComponentActivity() {
 
@@ -45,10 +48,16 @@ class HomeActivity : ComponentActivity() {
             Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
         }
 
+        viewModel.getNavigateToDetailsPage().observe(this) {
+            val intent = Intent(this, DetailsActivity::class.java)
+            intent.putExtra("productUid", it)
+            startActivity(intent)
+        }
+
         viewModel.loadDatabase(this)
 
         setContent {
-            HomeScreen(viewModel, this)
+            HomeScreen(viewModel)
         }
     }
 
@@ -59,7 +68,7 @@ class HomeActivity : ComponentActivity() {
 }
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, lifecycleOwner: LifecycleOwner) {
+fun HomeScreen(viewModel: HomeViewModel) {
     val navController = rememberNavController()
 
     BestOffersTheme {
@@ -75,8 +84,7 @@ fun HomeScreen(viewModel: HomeViewModel, lifecycleOwner: LifecycleOwner) {
                     composable(NAV_HOME) {
                         HomeScreen(
                             navController = navController,
-                            viewModel = viewModel,
-                            lifecycleOwner = lifecycleOwner
+                            viewModel = viewModel
                         )
                     }
                     composable(NAV_USER) { UserScreen(navController = navController, text = "User Screen") }
@@ -88,13 +96,13 @@ fun HomeScreen(viewModel: HomeViewModel, lifecycleOwner: LifecycleOwner) {
 }
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel, lifecycleOwner: LifecycleOwner) {
+fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
     val products = viewModel.getProducts().observeAsState()
 
     Column {
         TopAppBar(title = { Text("Home") })
         SearchField(viewModel)
-        ProductList(products = products.value.orEmpty())
+        ProductList(products = products.value.orEmpty(), viewModel)
     }
 }
 
@@ -177,19 +185,35 @@ fun SearchField(
 }
 
 @Composable
-fun ProductList(products: List<Product>) {
+fun ProductList(products: List<Product>, viewModel: HomeViewModel) {
     LazyColumn {
         items(products) { product ->
-            ProductCard(product = product)
+            ProductCard(product = product, viewModel)
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProductCard(product: Product) {
-    Column {
-        Text(text = product.name)
-        Text(text = product.price.toString())
+fun ProductCard(product: Product, viewModel: HomeViewModel) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp),
+        onClick = {
+            viewModel.navigateToDetailsPage(product.uid)
+        }
+    ) {
+        Column {
+            Text(
+                text = product.name,
+                fontSize = 16.sp
+            )
+            Text(
+                text = "R$" + product.price.toString(),
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
@@ -205,20 +229,20 @@ fun PreviewPage() {
                 Column {
                     TopAppBar(title = { Text("Home") })
                     SearchFieldPreview()
-                    //ProductList(products = viewModel.getProducts())
+                    ProductList(products = SampleData.productsSample(), HomeViewModel())
                 }
             }
         }
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewProductsList() {
-//    BestOffersTheme {
-//        ProductList(products = SampleData.productsSample())
-//    }
-//}
+@Preview
+@Composable
+fun PreviewProductsList() {
+    BestOffersTheme {
+        ProductList(products = SampleData.productsSample(), HomeViewModel())
+    }
+}
 
 @Preview
 @Composable

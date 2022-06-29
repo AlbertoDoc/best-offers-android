@@ -29,6 +29,7 @@ class HomeViewModel : ViewModel() {
 
     var products = MutableLiveData<List<Product>>()
     private val errorMessage = MutableLiveData<String>()
+    private val navigateToDetailsPage = MutableLiveData<String>()
 
     private lateinit var database: Database
     private lateinit var retrofitClient: Retrofit
@@ -55,24 +56,21 @@ class HomeViewModel : ViewModel() {
                         val jsonArray = responseBody?.get("data")?.asJsonObject?.get("products")?.asJsonArray
 
                         if (jsonArray != null) {
-                            val productList = arrayListOf<Product>()
-                            for (jsonObject in jsonArray) {
-                                val productJson = jsonObject.asJsonObject
-                                val product = Product(
-                                    productJson.get("id").asString,
-                                    productJson.get("name").asString,
-                                    productJson.get("price").asDouble,
-                                    "",
-                                    ""
-                                )
+                            viewModelScope.launch(Dispatchers.IO) {
+                                for (jsonObject in jsonArray) {
+                                    val productJson = jsonObject.asJsonObject
+                                    val product = Product(
+                                        productJson.get("id").asString,
+                                        productJson.get("name").asString,
+                                        productJson.get("price").asDouble,
+                                        "",
+                                        ""
+                                    )
 
-                                viewModelScope.launch(Dispatchers.IO) {
                                     if (database.productDao().getById(product.uid) == null) {
                                         database.productDao().insert(product)
                                     }
                                 }
-
-                                productList.add(product)
                             }
                         }
                     }
@@ -93,5 +91,13 @@ class HomeViewModel : ViewModel() {
 
     fun getErrorMessage(): LiveData<String> {
         return errorMessage
+    }
+
+    fun getNavigateToDetailsPage(): LiveData<String> {
+        return navigateToDetailsPage;
+    }
+
+    fun navigateToDetailsPage(productUid: String) {
+        navigateToDetailsPage.postValue(productUid)
     }
 }

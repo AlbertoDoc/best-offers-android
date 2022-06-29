@@ -48,6 +48,12 @@
             android:label="Home"
             android:theme="@style/Theme.BestOffers">
         </activity>
+
+        <activity android:name=".details.DetailsActivity"
+            android:exported="true"
+            android:label="Details"
+            android:theme="@style/Theme.BestOffers">
+        </activity>
     </application>
 
 </manifest>
