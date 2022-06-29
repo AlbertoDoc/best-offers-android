@@ -6,12 +6,12 @@ import retrofit2.http.*
 
 interface ProductOfInterestService {
 
-    @GET("/")
+    @GET("productsOfInterest/")
     fun getByUserId(userId: String): Call<JsonObject>
 
-    @POST("/")
+    @POST("productsOfInterest/")
     fun post(@Body json: JsonObject): Call<JsonObject>
 
-    @PUT("/{uid}/alertdown")
+    @PUT("productsOfInterest/{uid}/alertdown")
     fun put(@Query("uid") uid: String): Call<JsonObject>
 }
