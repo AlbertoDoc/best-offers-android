@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.bestoffers.repositories.retrofit.RetrofitClient
 import com.bestoffers.repositories.retrofit.jsonFactories.ProductFactory
 import com.bestoffers.repositories.retrofit.services.ProductService
-import com.bestoffers.repositories.room.daos.ProductDao
 import com.bestoffers.repositories.room.database.BestOffersDatabase
 import com.bestoffers.repositories.room.database.Database
 import com.bestoffers.repositories.room.entities.Product
@@ -71,6 +70,8 @@ class HomeViewModel : ViewModel() {
                                         database.productDao().insert(product)
                                     }
                                 }
+
+                                products.postValue(database.productDao().getByText("$text%"))
                             }
                         }
                     }
@@ -79,10 +80,6 @@ class HomeViewModel : ViewModel() {
                 }
             }
         })
-
-        viewModelScope.launch(Dispatchers.IO) {
-            products.postValue(database.productDao().getByText("$text%"))
-        }
     }
 
     fun getProducts(): LiveData<List<Product>> {

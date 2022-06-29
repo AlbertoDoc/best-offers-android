@@ -1,7 +1,6 @@
 package com.bestoffers.details
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -21,14 +20,18 @@ class DetailsActivity : ComponentActivity() {
 
         viewModel.productUid = intent.getStringExtra("productUid").toString()
 
+        viewModel.loadDatabase(this)
+
+        viewModel.loadProduct()
+
         setContent {
-            DetailsScreen(productUid = viewModel.productUid)
+            DetailsScreen(viewModel.product.name, viewModel.product.price, viewModel)
         }
     }
 }
 
 @Composable
-fun DetailsScreen(productUid: String) {
+fun DetailsScreen(name: String, price: Double, viewModel: DetailsViewModel) {
     BestOffersTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -39,7 +42,8 @@ fun DetailsScreen(productUid: String) {
             ) {
                 Column {
                     TopAppBar(title = { Text("Details") })
-                    Text(text = productUid)
+                    Text(text = name)
+                    Text(text = "R$$price")
                 }
             }
         }
@@ -49,5 +53,5 @@ fun DetailsScreen(productUid: String) {
 @Preview
 @Composable
 fun DetailsScreenPreview() {
-    DetailsScreen(productUid = "productUid")
+    DetailsScreen("nome teste", 300.0, DetailsViewModel())
 }
