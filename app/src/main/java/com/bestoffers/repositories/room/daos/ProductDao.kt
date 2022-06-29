@@ -23,4 +23,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM Product WHERE uid == :uid")
     fun getById(uid: String): Product?
+
+    @Query("SELECT * FROM Product WHERE name LIKE :filter")
+    fun getByText(filter: String): List<Product>
 }

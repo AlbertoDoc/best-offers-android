@@ -83,7 +83,7 @@ class HomeViewModel : ViewModel() {
         })
 
         viewModelScope.launch(Dispatchers.IO) {
-            products.postValue(database.productDao().getAll())
+            products.postValue(database.productDao().getByText("$text%"))
         }
     }
 
