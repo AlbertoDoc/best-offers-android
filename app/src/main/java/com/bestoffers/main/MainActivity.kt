@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bestoffers.home.HomeActivity
 import com.bestoffers.login.LoginActivity
 import com.bestoffers.register.RegisterActivity
 import com.bestoffers.ui.theme.BestOffersTheme
@@ -24,7 +25,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val model: MainActivityViewModel by viewModels()
+        val viewModel: MainActivityViewModel by viewModels()
+
+        viewModel.getNavigationMessage().observe(this) {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+
+        viewModel.loadDatabase(this)
+        viewModel.automaticLogin()
 
         setContent {
             BestOffersTheme {
