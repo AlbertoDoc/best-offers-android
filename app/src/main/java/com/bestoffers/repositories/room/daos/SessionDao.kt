@@ -8,8 +8,8 @@ import com.bestoffers.repositories.room.entities.Session
 
 @Dao
 interface SessionDao {
-    @Query("SELECT * FROM Session ORDER BY Session.expires_at ASC LIMIT 1")
-    fun get(): Session
+    @Query("SELECT * FROM Session LIMIT 1")
+    fun get(): Session?
 
     @Insert
     fun insert(session: Session)
