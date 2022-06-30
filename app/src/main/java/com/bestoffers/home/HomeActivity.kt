@@ -28,19 +28,31 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bestoffers.check_alert.CheckAlertRunnable
 import com.bestoffers.details.DetailsActivity
 import com.bestoffers.my_alerts.MyAlertsScreen
 import com.bestoffers.navigation.NAV_HOME
 import com.bestoffers.navigation.NAV_MY_ALERTS
 import com.bestoffers.navigation.NAV_USER
+import com.bestoffers.repositories.retrofit.RetrofitClient
+import com.bestoffers.repositories.room.database.BestOffersDatabase
 import com.bestoffers.repositories.room.entities.Product
 import com.bestoffers.ui.composables.AppBottomNavigation
 import com.bestoffers.ui.theme.BestOffersTheme
 import com.bestoffers.util.SampleData
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 
 class HomeActivity : ComponentActivity() {
 
+    private val BACKGROUND_ALERT_CHECK_FREQUENCY = 20L
+
     private val viewModel = HomeViewModel()
+
+    private lateinit var backgroundAlertCheckTask: ScheduledFuture<Any>
+    private lateinit var backgroundAlertExecutorService: ScheduledExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +68,14 @@ class HomeActivity : ComponentActivity() {
         }
 
         viewModel.loadDatabase(this)
+
+        backgroundAlertExecutorService = Executors.newSingleThreadScheduledExecutor()
+        backgroundAlertCheckTask = backgroundAlertExecutorService.scheduleAtFixedRate(
+            CheckAlertRunnable(BestOffersDatabase().getDatabase(this),
+                RetrofitClient().getRetrofitInstance(),
+                this
+            ), 0, BACKGROUND_ALERT_CHECK_FREQUENCY, TimeUnit.SECONDS
+        ) as ScheduledFuture<Any>
 
         setContent {
             HomeScreen(viewModel)

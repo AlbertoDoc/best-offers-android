@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.bestoffers.R
-import com.bestoffers.home.NavItem
+import com.bestoffers.navigation.NavItem
 
 @Composable
 fun AppBottomNavigation(

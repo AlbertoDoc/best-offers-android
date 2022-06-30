@@ -1,11 +1,8 @@
-package com.bestoffers.home
+package com.bestoffers.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.bestoffers.R
-import com.bestoffers.navigation.NAV_HOME
-import com.bestoffers.navigation.NAV_MY_ALERTS
-import com.bestoffers.navigation.NAV_USER
 
 sealed class NavItem(
     @StringRes val title: Int,
