@@ -31,6 +31,10 @@ class DetailsActivity : ComponentActivity() {
             Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
         }
 
+        viewModel.getSuccessMessage().observe(this) {
+            Toast.makeText(applicationContext, it, Toast.LENGTH_LONG).show()
+        }
+
         setContent {
             DetailsScreen(viewModel.product.name, viewModel.product.price, viewModel)
         }

@@ -22,7 +22,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import kotlin.math.roundToInt
 
 class DetailsViewModel : ViewModel() {
 
@@ -30,12 +29,13 @@ class DetailsViewModel : ViewModel() {
     lateinit var productUid: String
 
     private val errorMessage = MutableLiveData<String>()
+    private val successMessage = MutableLiveData<String>()
 
     var startPrice by mutableStateOf(0.0)
     var endPrice by mutableStateOf(0.0)
 
     private lateinit var database: Database
-    lateinit var retrofitClient: Retrofit
+    private lateinit var retrofitClient: Retrofit
 
     fun loadDatabase(context: Context) {
         database = BestOffersDatabase().getDatabase(context)
@@ -52,6 +52,10 @@ class DetailsViewModel : ViewModel() {
 
     fun getErrorMessage(): LiveData<String> {
         return errorMessage
+    }
+
+    fun getSuccessMessage(): LiveData<String> {
+        return successMessage
     }
 
     fun submitAlert() {
@@ -79,29 +83,54 @@ class DetailsViewModel : ViewModel() {
         return errorString
     }
 
-    fun sendAlertCreation() {
-        retrofitClient = RetrofitClient().getRetrofitInstance()
+    private fun sendAlertCreation() {
+        viewModelScope.launch(Dispatchers.IO) {
+            retrofitClient = RetrofitClient().getRetrofitInstance()
 
-        val productOfInterestService = retrofitClient.create(ProductOfInterestService::class.java)
-        val body = ProductOfInterestFactory().buildPostJson(
-            product.uid, startPrice.toFloat(), endPrice.toFloat(), true
-        )
+            val session = database.sessionDao().get()
+            val user = database.userDao().getAll()[0]
 
-        val request = productOfInterestService.post(body)
-        request.enqueue(object: Callback<JsonObject> {
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                errorMessage.postValue("Erro ao se conectar com o servidor.")
-            }
+            if (session != null) {
+                val productOfInterestService = retrofitClient.create(ProductOfInterestService::class.java)
+                val body = ProductOfInterestFactory().buildPostJson(
+                    product.uid, startPrice.toFloat(), endPrice.toFloat(), true
+                )
 
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    if (response.code() == 201) {
-                        viewModelScope.launch(Dispatchers.IO) {
+                val request = productOfInterestService.post(body, "Bearer " + session.token)
+                request.enqueue(object: Callback<JsonObject> {
+                    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                        errorMessage.postValue("Erro ao se conectar com o servidor.")
+                    }
 
+                    override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                        if (response.isSuccessful) {
+                            if (response.code() == 201) {
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    val jsonObject = response.body()
+
+                                    val uid = jsonObject?.get("data")?.asJsonObject?.get("productOfInterest")
+                                        ?.asJsonObject?.get("id")?.asString
+                                    val alert = jsonObject?.get("data")?.asJsonObject?.get("productOfInterest")
+                                        ?.asJsonObject?.get("alert")?.asBoolean
+
+                                    if (uid != null && alert != null) {
+                                        val productOfInterest = ProductOfInterest(
+                                            uid, startPrice.toFloat(), endPrice.toFloat(), alert, productUid, user.uid
+                                        )
+
+                                        database.productOfInterestDao().insert(productOfInterest)
+                                        successMessage.postValue("Alerta criado com sucesso!")
+                                    }
+                                }
+                            } else {
+                                errorMessage.postValue("Erro na conexão com o servidor, tente novamente mais tarde.")
+                            }
+                        } else {
+                            errorMessage.postValue("Erro na conexão com o servidor, tente novamente mais tarde.")
                         }
                     }
-                }
+                })
             }
-        })
+        }
     }
 }

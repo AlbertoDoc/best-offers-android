@@ -10,7 +10,7 @@ interface ProductOfInterestService {
     fun getByUserId(userId: String): Call<JsonObject>
 
     @POST("productsOfInterest/")
-    fun post(@Body json: JsonObject): Call<JsonObject>
+    fun post(@Body json: JsonObject, @Header("Authorization") token: String): Call<JsonObject>
 
     @PUT("productsOfInterest/{uid}/alertdown")
     fun put(@Query("uid") uid: String): Call<JsonObject>

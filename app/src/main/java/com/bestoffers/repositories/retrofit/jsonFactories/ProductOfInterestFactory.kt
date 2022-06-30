@@ -11,7 +11,7 @@ class ProductOfInterestFactory {
         json.addProperty("productId", productId)
         json.addProperty("startPrice", startPrice)
         json.addProperty("endPrice", endPrice)
-        json.addProperty("activate", activate)
+        json.addProperty("activateForThirdUsers", activate)
 
         return json
     }
