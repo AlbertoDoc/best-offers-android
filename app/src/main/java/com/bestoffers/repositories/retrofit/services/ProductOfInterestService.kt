@@ -7,7 +7,7 @@ import retrofit2.http.*
 interface ProductOfInterestService {
 
     @GET("productsOfInterest/")
-    fun getByUserId(userId: String): Call<JsonObject>
+    fun getByUser(@Header("Authorization") token: String): Call<JsonObject>
 
     @POST("productsOfInterest/")
     fun post(@Body json: JsonObject, @Header("Authorization") token: String): Call<JsonObject>

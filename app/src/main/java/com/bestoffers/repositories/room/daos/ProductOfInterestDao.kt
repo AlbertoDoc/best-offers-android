@@ -1,9 +1,6 @@
 package com.bestoffers.repositories.room.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.bestoffers.repositories.room.entities.ProductOfInterest
 
 @Dao
@@ -14,9 +11,12 @@ interface ProductOfInterestDao {
     @Insert
     fun insertAll(productOfInterest: List<ProductOfInterest>)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(productOfInterest: ProductOfInterest)
 
     @Delete
     fun delete(productOfInterest: ProductOfInterest)
+
+    @Query("SELECT * FROM ProductOfInterest WHERE uid == :uid")
+    fun getById(uid: String): ProductOfInterest?
 }

@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bestoffers.details.DetailsActivity
+import com.bestoffers.my_alerts.MyAlertsScreen
 import com.bestoffers.navigation.NAV_HOME
 import com.bestoffers.navigation.NAV_MY_ALERTS
 import com.bestoffers.navigation.NAV_USER
@@ -64,6 +65,7 @@ class HomeActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.loadProducts()
+        viewModel.loadAlerts()
     }
 }
 
@@ -88,7 +90,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
                         )
                     }
                     composable(NAV_USER) { UserScreen(navController = navController, text = "User Screen") }
-                    composable(NAV_MY_ALERTS) { MyAlertsScreen(navController = navController, text = "My Alerts Screen") }
+                    composable(NAV_MY_ALERTS) { MyAlertsScreen(viewModel) }
                 }
             }
         }
@@ -109,11 +111,6 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
 @Composable
 fun UserScreen(navController: NavController, text: String) {
     Text(text = "text2")
-}
-
-@Composable
-fun MyAlertsScreen(navController: NavController, text: String) {
-    Text(text = "text3")
 }
 
 @Composable
