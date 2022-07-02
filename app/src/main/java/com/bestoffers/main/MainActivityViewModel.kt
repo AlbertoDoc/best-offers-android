@@ -69,12 +69,11 @@ class MainActivityViewModel : ViewModel() {
                                     }
 
                                 if (session != null) {
-                                    //TODO more than 1 session is storaged
                                     viewModelScope.launch(Dispatchers.IO) {
-                                        val sessionDatabase = database.sessionDao().get()
-                                        if (sessionDatabase != null) {
-                                            database.sessionDao().delete(session)
-                                        }
+                                        val sessionsDatabase = database.sessionDao().getAll()
+
+                                        database.sessionDao().deleteAll(sessionsDatabase)
+
                                         database.sessionDao().insert(session)
                                         navigationMessage.postValue("Ok")
                                     }
