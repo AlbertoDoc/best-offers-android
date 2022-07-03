@@ -81,6 +81,7 @@ class HomeViewModel : ViewModel() {
                 }
             }
         })
+        loadAlerts()
     }
 
     fun loadAlerts() {
