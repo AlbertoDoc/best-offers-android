@@ -1,9 +1,6 @@
 package com.bestoffers.ui.composables
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -22,7 +19,7 @@ fun AppBottomNavigation(
     val navItems = listOf(NavItem.Home, NavItem.User, NavItem.Products)
 
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.teal_700)
+        backgroundColor = colorResource(id = R.color.orange)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
