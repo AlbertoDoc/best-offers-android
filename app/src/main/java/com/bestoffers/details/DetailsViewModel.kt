@@ -115,7 +115,7 @@ class DetailsViewModel : ViewModel() {
 
                                     if (uid != null && alert != null) {
                                         val productOfInterest = ProductOfInterest(
-                                            uid, startPrice.toFloat(), endPrice.toFloat(), alert, productUid, user.uid
+                                            uid, startPrice.toFloat(), endPrice.toFloat(), alert, product.uid, user.uid
                                         )
 
                                         database.productOfInterestDao().insert(productOfInterest)

@@ -69,9 +69,7 @@ class HomeViewModel : ViewModel() {
                                         ""
                                     )
 
-                                    if (database.productDao().getById(product.uid) == null) {
-                                        database.productDao().insert(product)
-                                    }
+                                    database.productDao().insert(product)
                                 }
 
                                 products.postValue(database.productDao().getByText("$text%"))
@@ -121,12 +119,10 @@ class HomeViewModel : ViewModel() {
                                             if (uid != null && startPrice != null && endPrice != null
                                                 && alert != null && userId != null && productId != null) {
                                                 val productOfInterest = ProductOfInterest(
-                                                    uid, startPrice, endPrice, alert, userId, productId
+                                                    uid, startPrice, endPrice, alert, productId, userId
                                                 )
 
-                                                if (database.productOfInterestDao().getById(productOfInterest.uid) == null) {
-                                                    database.productOfInterestDao().insert(productOfInterest)
-                                                }
+                                                database.productOfInterestDao().insert(productOfInterest)
                                             }
                                         }
 

@@ -50,13 +50,11 @@ class CheckAlertRunnable(private var database: Database, private val retrofit: R
                                     if (uid != null && startPrice != null && endPrice != null
                                         && alert != null && userId != null && productId != null) {
                                         val productOfInterest = ProductOfInterest(
-                                            uid, startPrice, endPrice, alert, userId, productId
+                                            uid, startPrice, endPrice, alert, productId, userId
                                         )
 
                                         thread {
-                                            if (database.productOfInterestDao().getById(productOfInterest.uid) == null) {
-                                                database.productOfInterestDao().insert(productOfInterest)
-                                            }
+                                            database.productOfInterestDao().insert(productOfInterest)
 
                                             if (productOfInterest.alert) {
                                                 val product = database.productDao().getById(productId)
