@@ -2,8 +2,11 @@ package com.bestoffers.check_alert
 
 import android.content.Context
 import android.util.Log
+import com.bestoffers.repositories.retrofit.jsonFactories.ProductFactory
 import com.bestoffers.repositories.retrofit.services.ProductOfInterestService
+import com.bestoffers.repositories.retrofit.services.ProductService
 import com.bestoffers.repositories.room.database.Database
+import com.bestoffers.repositories.room.entities.Product
 import com.bestoffers.repositories.room.entities.ProductOfInterest
 import com.bestoffers.util.NotificationHelper
 import com.google.gson.JsonObject
@@ -22,6 +25,7 @@ class CheckAlertRunnable(private var database: Database, private val retrofit: R
         val productOfInterestService = retrofit.create(ProductOfInterestService::class.java)
         val session = database.sessionDao().get()
 
+        // Updating alerts
         if (session != null) {
             val request = productOfInterestService.getByUser("Bearer " + session.token)
             request.enqueue(object: Callback<JsonObject> {
