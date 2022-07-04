@@ -5,15 +5,19 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bestoffers.R
 import com.bestoffers.check_alert.CheckAlertRunnable
 import com.bestoffers.details.DetailsActivity
 import com.bestoffers.my_alerts.MyAlertsScreen
@@ -117,14 +122,19 @@ fun HomeScreen(viewModel: HomeViewModel) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
     val products = viewModel.getProducts().observeAsState()
 
-    Column {
-        TopAppBar(title = { Text("Home") })
-        SearchField(viewModel)
-        ProductList(products = products.value.orEmpty(), viewModel)
+    LazyColumn(
+        modifier = Modifier.fillMaxHeight()
+    ) {
+        stickyHeader { SearchField(viewModel) }
+
+        items(products.value.orEmpty()) {
+            product -> ProductCard(product = product, viewModel)
+        }
     }
 }
 
@@ -203,8 +213,8 @@ fun SearchField(
 
 @Composable
 fun ProductList(products: List<Product>, viewModel: HomeViewModel) {
-    LazyColumn {
-        items(products) { product ->
+    Column {
+        products.forEach { product ->
             ProductCard(product = product, viewModel)
         }
     }
@@ -215,13 +225,17 @@ fun ProductList(products: List<Product>, viewModel: HomeViewModel) {
 fun ProductCard(product: Product, viewModel: HomeViewModel) {
     Card(
         modifier = Modifier
+            .height(160.dp)
             .fillMaxWidth()
-            .height(120.dp),
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState()),
         onClick = {
             viewModel.navigateToDetailsPage(product.uid)
-        }
+        },
     ) {
-        Column {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
             Text(
                 text = product.name,
                 fontSize = 16.sp
@@ -232,6 +246,11 @@ fun ProductCard(product: Product, viewModel: HomeViewModel) {
             )
         }
     }
+    Divider(
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+        color = MaterialTheme.colors.primary.copy(alpha = 0.6f),
+        thickness = 1.dp
+    )
 }
 
 @Preview
