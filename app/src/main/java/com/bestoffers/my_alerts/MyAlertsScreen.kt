@@ -1,11 +1,13 @@
 package com.bestoffers.my_alerts
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.runtime.Composable
@@ -13,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,11 +50,19 @@ fun AlertCard(alert: ProductOfInterest, viewModel: HomeViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp),
+                .height(160.dp)
+                .padding(8.dp)
+                .background(
+                    color = if (alert.alert) Color.Green.copy(0.1f) else Color.Red.copy(0.1f),
+                    shape = RoundedCornerShape (12.dp)
+                ),
             horizontalArrangement = Arrangement.SpaceBetween,
+
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(start = 8.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -65,7 +76,9 @@ fun AlertCard(alert: ProductOfInterest, viewModel: HomeViewModel) {
                 Text(text = "Preço desejado entre R$" + alert.startPrice + " e R$" + alert.endPrice)
             }
             Column(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(end = 8.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
