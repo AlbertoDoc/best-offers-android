@@ -21,7 +21,7 @@ import com.bestoffers.repositories.room.entities.ProductOfInterest
 
 @Composable
 fun MyAlertsScreen(viewModel: HomeViewModel) {
-    val alerts = viewModel.getAlerts().observeAsState()
+    val alerts = viewModel.alerts.observeAsState()
 
     Column {
         TopAppBar(title = { Text("My Alerts") })

@@ -1,6 +1,9 @@
 package com.bestoffers.home
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -27,6 +30,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -57,6 +62,12 @@ class HomeActivity : ComponentActivity() {
     private lateinit var backgroundAlertCheckTask: ScheduledFuture<Any>
     private lateinit var backgroundAlertExecutorService: ScheduledExecutorService
 
+    private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+             viewModel.loadAlerts()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -79,6 +90,10 @@ class HomeActivity : ComponentActivity() {
                 this
             ), 0, BACKGROUND_ALERT_CHECK_FREQUENCY, TimeUnit.SECONDS
         ) as ScheduledFuture<Any>
+
+        LocalBroadcastManager
+            .getInstance(this)
+            .registerReceiver(messageReceiver, IntentFilter("updateAlertList"))
 
         setContent {
             HomeScreen(viewModel)

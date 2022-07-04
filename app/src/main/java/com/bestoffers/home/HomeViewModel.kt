@@ -29,7 +29,7 @@ class HomeViewModel : ViewModel() {
     var text by mutableStateOf("")
 
     var products = MutableLiveData<List<Product>>()
-    var alerts = MutableLiveData<List<ProductOfInterest>>()
+    lateinit var alerts: LiveData<List<ProductOfInterest>>
     private val errorMessage = MutableLiveData<String>()
     private val navigateToDetailsPage = MutableLiveData<String>()
 
@@ -127,7 +127,7 @@ class HomeViewModel : ViewModel() {
                                             }
                                         }
 
-                                        alerts.postValue(database.productOfInterestDao().getAll())
+                                        alerts = database.productOfInterestDao().getAllLiveData()
                                     }
                                 }
                             }
@@ -140,10 +140,6 @@ class HomeViewModel : ViewModel() {
 
     fun getProducts(): LiveData<List<Product>> {
         return products
-    }
-
-    fun getAlerts(): LiveData<List<ProductOfInterest>> {
-        return alerts
     }
 
     fun getErrorMessage(): LiveData<String> {

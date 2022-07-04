@@ -1,7 +1,9 @@
 package com.bestoffers.check_alert
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bestoffers.repositories.retrofit.jsonFactories.ProductFactory
 import com.bestoffers.repositories.retrofit.services.ProductOfInterestService
 import com.bestoffers.repositories.retrofit.services.ProductService
@@ -72,6 +74,8 @@ class CheckAlertRunnable(private var database: Database, private val retrofit: R
                                 }
                             }
                         }
+                        val intent = Intent("updateAlertList")
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
                     }
                 }
             })
